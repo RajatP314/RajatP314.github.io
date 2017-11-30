@@ -1,0 +1,44 @@
+<meta charset="utf-8" />
+<canvas width="400" height="400" style="border:1px solid;" id="board"></canvas>
+<script>
+
+var c = document.getElementById("board");
+var f = c.getContext("2d");
+
+var fps = 30;
+
+var mouseCoords = [];
+var mousemove = false;
+
+c.onmousemove = function(event){
+	var r = c.getBoundingClientRect();
+	mouseCoords = [event.clientX-r.left, event.clientY-r.top];
+	if(mousemove == false){
+	mousemove = true;
+	setTimeout( function(){
+				s = 4;
+			}, 100);
+	}
+}
+var s = 100;
+var loop = setInterval(render, 1000/fps);
+
+
+function render(){
+	f.clearRect(0,0,c.width, c.height);
+	for(var i=0;i<c.width;i+=s){
+		for(var j=0;j<c.height;j+=s){
+			var dx = mouseCoords[0]-j, dy = mouseCoords[1]-i;
+			var distance = Math.sqrt(dx*dx+dy*dy);
+			var lengths = [Math.sqrt(i*i+j*j), Math.sqrt((400-i)*(400-i)+j*j), Math.sqrt(i*i+(400-j)*(400-j)), Math.sqrt((400-i)*(400-i)+(400-j)*(400-j))];
+			var d = distance+(lengths[0]+lengths[1]+lengths[2]+lengths[3])/4
+			var hue = 360*Math.cos(d/300);
+			var saturation = 50*Math.sin(d)+50;
+			var lightness = 25*Math.sin(d/10)+50;
+			f.fillStyle="hsl("+hue+","+saturation+"%,"+lightness+"%)";
+			f.fillRect(j, i, s, s);
+		}
+	}
+}
+
+</script>

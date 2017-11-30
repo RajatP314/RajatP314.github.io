@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Site</title>
+    <meta hcarset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <style>
+
+div.container {
+              text-align:center;
+              margin-top:5px;
+              margin-bottom:5px;
+
+             }
+.row > .col-sm > .container {}
+.row:before, .row:after{
+	display:none;
+}
+.row {
+	  display: flex;
+	  display: -webkit-flex;
+    border-bottom:4px solid navy;}
+.row > .col-sm {float:left;}
+#ct {display:flex;}
+.row2 > .col-sm > .container > div {float:left;}
+#box {}
+#exp {
+width:510px;
+height:400px;
+background-color:skyblue;
+}
+.boxthing {height:33%;
+  padding-top:10%;
+  font-size:22px;}
+header,article,footer {width:1000px;}
+header > .container, footer > .container {background-color:cornflowerblue;}
+#explanation {background-color:lightgray;}
+    </style>
+  </head>
+
+  <body>
+      <header>
+        <div class="container">
+          <h1 class="display-3">JavaScript Canvas Stuff</h1>
+        </div>
+      </header>
+      <article>
+    <div class="container">
+    
+      <div class="container">
+      
+      </div>
+      
+      <div class="row" id="row2">
+        
+          <div class="container" id="ct">
+
+            <div style="width:420px;height:420px" id="box">
+              <div id="para" style="width:420px;height:420px;">
+			<object type="text/html" data="script1.html" style="width:420px;height:420px;"></object>
+		</div>
+            </div>
+
+           <div style="height:420px;" id="exp" class="container">
+             <p class="boxthing">
+                Move your mouse around the canvas to the left.
+             </p>
+             <p class="boxthing">
+                Click inside this box to change the effect.
+             </p>
+             <p class="boxthing">
+               There are 3 different effects to choose from.
+             </p>
+           </div>       
+          </div>
+        
+      </div>
+
+      <div class="row" id="row4">
+        <div class="col-sm">
+          <div class="container" id="explanation">
+
+               <div class="container">
+              <h1 class="display-6">How did I do this?</h1>
+              <hr>
+              <p class="lead">
+                The canvas effects are based on the location of the mouse pointer relative to the canvas corners.
+              </p>
+              <p>
+                The flip effect is a CSS transformation animated with jQuery.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    </article>
+    <footer>
+      <div class="container">
+        I really need some copyright.
+      </div>
+    </footer>
+    <script src="flip.js"></script>
+
+     <script>
+
+var square = document.getElementById("para");
+var sq1 = '<object type="text/html" data="script1.html" style="width:420px;height:420px;"></object>';
+var sq2 = '<object type="text/html" data="script2.html" style="width:420px;height:420px;"></object>';
+var sq3 = '<object type="text/html" data="script3.html" style="width:420px;height:420px;"></object>';
+
+
+var contentList = [sq1, sq2, sq3];
+var counter = 0;
+//var s = document.querySelector(canvas);
+//alert($("#exp"));
+$("#exp").click(function(){
+      //alert("6");
+			counter++;
+//alert(counter);
+			rotate(square, contentList[counter%contentList.length]);
+		});
+
+    </script>
+
+  <!--  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+  </body>
+
+</html>

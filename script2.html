@@ -1,0 +1,46 @@
+<meta charset="utf-8" />
+<canvas width="400" height="400" style="border:1px solid;" id="board"></canvas>
+<script>
+
+var c = document.getElementById("board");
+var f = c.getContext("2d");
+
+var fps = 30;
+
+var mouseCoords = [];
+var mousemove = false;
+
+c.onmousemove = function(event){
+	var r = c.getBoundingClientRect();
+	mouseCoords = [event.clientX-r.left, event.clientY-r.top];
+	if(mousemove == false){
+	mousemove = true;
+	setTimeout( function(){
+				s = 10;
+			}, 100);
+	}
+}
+var s = 100;
+var loop = setInterval(render, 1000/fps);
+
+function render(){
+	f.clearRect(0,0,c.width, c.height);
+	for(var i=0;i<c.width;i+=s){
+		for(var j=0;j<c.height;j+=s){
+			var dx = mouseCoords[0]-j, dy = mouseCoords[1]-i;
+			var distance = Math.sqrt(dx*dx+dy*dy);
+			var length = Math.sqrt((200-i)*(200-i)+(200-j)*(200-j));
+			var d = (distance+length)/2
+			var hue = 360*Math.cos(d/150);
+			var saturation = 50*Math.cos(d/10)+50;
+			var lightness = 25*Math.sin(d/10)+30;
+			f.strokeStyle="hsl("+hue+","+saturation+"%,"+lightness+"%)";
+			f.beginPath();
+			f.arc(j, i, d/3, 0, 2*Math.PI);
+			f.stroke();
+			f.closePath();
+		}
+	}
+}
+
+</script>
