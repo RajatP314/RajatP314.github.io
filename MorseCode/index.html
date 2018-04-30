@@ -14,10 +14,10 @@
     <p>Code:<br />
       <textarea id="code"></textarea>
     </p>
-    <input type="submit" value="Decode" onclick="">
+    <input type="submit" value="Decode" onclick="decodeInput()">
     <script>
-let symbols = {".":"\040", "-":"\015"};
-//let symbols = {".":".", "-":"-"};
+//let symbols = {".":"\040", "-":"\015"};
+let symbols = {".":"u", "-":"/"};
 let code =
     {
       "a":".-",
@@ -58,10 +58,18 @@ let code =
       "0":"-----"
     }
 let morse = new MorseCode(symbols, code);
+
 function encodeInput(){
   let mc = morse.encode(document.querySelector("#text").value.toLowerCase(), document.querySelector("#separator").value)
   document.querySelector("#code").value = mc;
 }
+
+function decodeInput(){
+  let pt = morse.decode(document.querySelector("#code").value);
+  document.querySelector("#text").value = pt;
+}
+
+
     </script>
   </body>
 </html>

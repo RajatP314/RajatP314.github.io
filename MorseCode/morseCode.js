@@ -18,4 +18,17 @@ class MorseCode{
     return output;
   }
 
+  decode(codedText){
+    let output = "";
+    let letters = codedText.split(new RegExp('[^'+this.symbols['.']+this.symbols['-']+']'));
+    //console.log(letters)
+    for(let i=0;i<letters.length;i++){
+      let s = letters[i].replace(new RegExp(symbols['.'], 'g'), '.').replace(new RegExp(symbols['-'], 'g'), '-');
+      if(Object.values(this.code).indexOf(s) > -1){
+        output += Object.keys(this.code)[ Object.values(this.code).indexOf(s) ];
+      }
+    }
+    return output;
+  }
+
 }
