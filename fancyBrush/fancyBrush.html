@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>
+		Fancy Brush
+		</title>
+		<style>
+
+body {background-color:#353535;}
+
+		</style>
+	</head>
+	<body>
+		<canvas width="900" height="900" style="background-color:black;"></canvas>
+		<script>
+		
+let c = document.querySelector('canvas');
+let f = c.getContext('2d');
+f.fillRect(0,0,900,900);
+let t = 0;
+let tMax = 3000;
+
+let brushList = [];
+
+		</script>
+		<script src="brush.js"></script>
+		<script src="letter.js"></script>
+		<script>
+
+let loop;
+loop = setInterval(render, 1000/1000);
+
+function render(){
+	//f.clearRect(0, 0, c.width, c.height)
+	for(brush of brushList){
+		if(brush !== null){
+			brush.update(f, t, true);
+		}
+		if(t >= tMax && brush.duration === -1){
+			brush.deleteSelfFromList();
+		}
+	}
+	if(t < tMax){	
+		t++;
+	} else {
+		//clearInterval(loop);
+	}	
+	brushList = cleanList(brushList);
+	for(let i=0;i<brushList.length;i++){
+		brushList[i].index = i;
+		brushList[i].list = brushList;
+	}
+}
+
+function cleanList(list){
+	return list.filter( (brush) => brush !== null);
+}
+		
+		</script>
+	</body>	
+</html>
