@@ -7,7 +7,7 @@
 		<p id="test">...</p>
 		<script>
 
-window.addEVentListener('devicemotion', (event)=>{
+window.addEventListener('devicemotion', (event)=>{
 	document.getElementById("test").innerHTML = event.acceleration.x;
 });
 
