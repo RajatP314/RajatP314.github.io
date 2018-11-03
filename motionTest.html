@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Device Motion Test</title>
+	</head>
+	<body>
+		<p id="test">...</p>
+		<script>
+
+window.addEVentListener('devicemotion', (event)=>{
+	document.getElementById("test").innerHTML = event.acceleration.x;
+});
+
+		</script>
+	</body>
+</html>
