@@ -4,10 +4,10 @@
 		<title>Device Motion Test</title>
 	</head>
 	<body>
-		<p id="test">!</p>
+		<p id="test">!!!</p>
 		<script>
 
-window.navigator.vibrate(200);
+window.navigator.mozVibrate(200);
 			
 window.addEventListener('devicemotion', (event)=>{
 	document.getElementById("test").innerHTML = event.acceleration.x;
