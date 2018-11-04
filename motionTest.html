@@ -4,7 +4,7 @@
 		<title>Device Motion Test</title>
 	</head>
 	<body>
-		<p id="test">IT WORKS</p>
+		<p id="test" style="color:blue;">IT WORKS!!!!!!</p>
 		<script>
 
 //navigator.vibrate(200);
@@ -16,7 +16,7 @@
 var grammar = '#JSGF V1.0; grammar colors; public <color> = aqua | azure | beige | bisque | black | blue | brown | chocolate | coral | crimson | cyan | fuchsia | ghostwhite | gold | goldenrod | gray | green | indigo | ivory | khaki | lavender | lime | linen | magenta | maroon | moccasin | navy | olive | orange | orchid | peru | pink | plum | purple | red | salmon | sienna | silver | snow | tan | teal | thistle | tomato | turquoise | violet | white | yellow ;'
 var recognition = new webkitSpeechRecognition();
 var speechRecognitionList = new  webkitSpeechGrammarList();
- webkitspeechRecognitionList.addFromString(grammar, 1);
+speechRecognitionList.addFromString(grammar, 1);
 recognition.grammars =  webkitspeechRecognitionList;
 //recognition.continuous = false;
 recognition.lang = 'en-US';
