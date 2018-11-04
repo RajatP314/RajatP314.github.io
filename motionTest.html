@@ -7,17 +7,17 @@
 		<p id="test">IT WORKS</p>
 		<script>
 
-navigator.vibrate(200);
+//navigator.vibrate(200);
 			
-window.addEventListener('devicemotion', (event)=>{
-	document.getElementById("test").innerHTML = event.acceleration.x;
-	navigator.vibrate(300);
-});
+//window.addEventListener('devicemotion', (event)=>{
+//	document.getElementById("test").innerHTML = event.acceleration.x;
+//	navigator.vibrate(300);
+//});
 var grammar = '#JSGF V1.0; grammar colors; public <color> = aqua | azure | beige | bisque | black | blue | brown | chocolate | coral | crimson | cyan | fuchsia | ghostwhite | gold | goldenrod | gray | green | indigo | ivory | khaki | lavender | lime | linen | magenta | maroon | moccasin | navy | olive | orange | orchid | peru | pink | plum | purple | red | salmon | sienna | silver | snow | tan | teal | thistle | tomato | turquoise | violet | white | yellow ;'
-var recognition = new SpeechRecognition();
-var speechRecognitionList = new SpeechGrammarList();
-speechRecognitionList.addFromString(grammar, 1);
-recognition.grammars = speechRecognitionList;
+var recognition = new webkitSpeechRecognition();
+var speechRecognitionList = new  webkitSpeechGrammarList();
+ webkitspeechRecognitionList.addFromString(grammar, 1);
+recognition.grammars =  webkitspeechRecognitionList;
 //recognition.continuous = false;
 recognition.lang = 'en-US';
 recognition.interimResults = false;
