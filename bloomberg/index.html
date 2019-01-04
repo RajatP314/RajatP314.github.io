@@ -1,0 +1,235 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Server Data Visualization</title>
+		<link rel="stylesheet" href="index.css" />
+		<script src="data.js"></script>
+		<script src="server.js"></script>
+		<script src="mouseRegion.js"></script>
+		<script src="plots.js"></script>
+	</head>
+	<body>
+		<div id="container">
+			<canvas width="900" height="900"></canvas>
+			<div id="ui_container">
+				<p class="button_container">
+					<button type="button" id="v1">Uptime</button>
+					<button type="button" id="v2">Inventory</button>
+					<label for="categorize">Show areas:
+						<input type="checkbox" id="categorize" checked/>
+					</label>
+				
+				</p>
+				<p id="info_box">
+					Default Text
+				</p>
+				<form id="ui_filter">
+					<div id="checklist_container">
+						<div class="list_container ">
+							<p>Area</span>
+							<ul class="menu_list" id="area_list">
+							</ul>
+						</div>
+						<div class="list_container">
+							<p class="menu_header">Version Format</span>
+							<ul class="menu_list" id="format_list">
+							</ul>
+						</div>
+					</div>
+					<div id="uptime_container">
+						<p>Uptime Range</p>
+						<label for="uptime_min">Min:</label> <input type="number" min="0" value="0" id="uptime_min" />
+						<br />
+						<label for="uptime_max">Max:</label> <input type="number" min="0" id="uptime_max" />
+					</div>
+					<p class="button_container">
+						<button type="button" id="filter_button">Filter</button>
+						<input type="reset" value="Reset" id="reset" />
+					</p>
+				</form>
+				<p id="hostname_list" class="toggleable_list">
+					<span>Hostname List</span>
+					<span id="dropdown"> &#9660;</span>
+				</p>
+				<p id="incomplete_list" class="toggleable_list">
+					<span>Servers With Incomplete Data (hover to show)</span>
+				</p>
+			</div>
+		</div>
+		<script>
+let c = document.querySelector("canvas");			//Define all the variables
+let f = c.getContext("2d");
+let info = document.querySelector("#info_box");
+
+let servers = [];
+let incomplete = [];
+let uncategorizedServers = [];
+
+let categories = [];
+
+let formats = [];
+let formatStrs = [];
+let versions = [];
+
+let currentData = servers;
+let currentPlot = "";
+let categorized = true;
+let mouseRegions = [];
+
+defaultText = info.innerHTML;
+main();												//For demo purposes the data is
+													//hard-coded, so main is called here
+function main(){	//Called in data.js once the JSON loads
+	initialize();
+	uptimeFreqPlot(currentData, c, f);
+	//inventoryPlot(currentData, c, f);
+}
+
+c.onmousemove = (event)=>{					//If the mouse is hovering over a
+	let r = c.getBoundingClientRect();		//region of the plot, then update the 
+	let mx = event.clientX - r.left;		//info box with relevant data
+	let my = event.clientY - r.top;
+	//mouse = {x: mx, y: my};
+	for(let region of mouseRegions){
+		if(region.pointInRegion(mx, my)){
+			region.updateElement(info);
+			return;
+		}
+	}
+	info.innerHTML = defaultText;
+}
+
+let listToggled = false;
+let hList = document.querySelector("#hostname_list");
+
+hList.onclick = ()=>{					//Dropdown for list of hostnames satisfying
+	hList.scrollTop = 0;				//the chosen set of filter conditions
+	listToggled = !listToggled;
+	if(listToggled){
+		hList.style.height = "150px";
+		hList.style.overflow = "auto"
+	} else {
+		hList.style.height = "2em";
+		hList.style.overflow = "hidden"
+	}
+}
+
+document.querySelector("#v1").onclick = ()=>{
+	uptimeFreqPlot(currentData, c, f);
+}													//Buttons to switch between plots
+
+document.querySelector("#v2").onclick = ()=>{
+	inventoryPlot(currentData, c, f);
+}
+
+document.querySelector("#categorize").oninput = (event)=>{
+	categorized = event.target.checked;					
+	try{												//Toggle whether to use the 
+	currentData = applyFilter();						//normal dataset or the set where
+	} catch(e){											//all servers' "area" is "server"
+		alert(e);
+		return;
+	}
+	switch(currentPlot){
+		case "uptime": uptimeFreqPlot(currentData, c, f);
+			break;
+		case "inventory":inventoryPlot(currentData, c, f);
+			break;
+		default:
+			break;
+	}
+}
+
+
+document.querySelector("#reset").onclick = (event)=>{	//Reset filter form
+	event.preventDefault();
+	document.querySelector("#uptime_min").value = 0;
+	document.querySelector("#uptime_max").value = Math.max(...servers.map((s)=>s.uptime));
+	let checkboxes = document.querySelectorAll(".list_container input");
+	for(let box of checkboxes){
+		box.checked = false;
+	}
+}
+
+document.querySelector("#filter_button").onclick = ()=>{	//Filter button event handler
+	listToggled = false;									
+	try{													
+	currentData = applyFilter(); //Apply chosen filters to the dataset.			
+	} catch(e){
+		alert(e);
+		return;
+	}
+	let list = document.getElementById("hostname_list"); //Shows hostnames that satisfy the filter criteria
+	list.innerHTML = `<span>Hostnames (${currentData.length})</span> <span id="dropdown">&#9660;</span><br /><br />`;
+	list.innerHTML += currentData.map((s)=>s.hostname).join("<br />");
+	switch(currentPlot){									//Redraws the plot
+		case "uptime": uptimeFreqPlot(currentData, c, f);
+			break;
+		case "inventory":inventoryPlot(currentData, c, f);
+			break;
+		default:
+			break;
+	}
+}
+
+function filterByAreas(serverList, areas){			//Looks for servers in certain areas
+	if(areas.length === 0){return serverList;}
+	return serverList.filter( (s)=>{
+		return areas.indexOf(s.area) > -1;
+	});
+}
+
+function filterByFormats(serverList, formats){		//Looks for servers with certain 
+	if(formats.length === 0){return serverList;}	//version formats
+	return serverList.filter( (s)=>{
+		return formats.indexOf(getFormat(s.version).format) > -1;
+	});
+}
+
+function filterByUptime(serverList, min, max){		//Looks for servers within a certain
+	return serverList.filter( (s)=>{				//uptime range.
+		let t = parseInt(s.uptime);
+		return (t >= min && t <= max);
+	});
+}
+
+function applyFilter(){ //Apply chosen filters to the dataset
+	let areaFilters = Array.from(document.querySelectorAll("#area_list > li > input:checked")).map((i)=>i.value);
+	if(!categorized && areaFilters.length > 0){
+		throw Error("Enable 'Show Areas' and try again.");
+	}
+	let formatFilters = Array.from(document.querySelectorAll("#format_list > li > input:checked")).map((i)=>i.value);
+	let uptimeMin = document.querySelector("#uptime_min").value;
+	let uptimeMax = document.querySelector("#uptime_max").value;
+	console.log(uptimeMin.length);
+	if(uptimeMin.length === 0 || uptimeMax.length === 0 ||
+		uptimeMin.match(/[^0-9]/g) !== null || uptimeMax.match(/[^0-9]/g) !== null){
+		throw Error("Invalid Uptime Range");
+	}											//Input must be two nonnegative integers,
+	uptimeMin = Math.floor(uptimeMin);			//with min < max.
+	uptimeMax = Math.ceil(uptimeMax);
+	if(uptimeMin < 0 || uptimeMax < 0 || uptimeMax < uptimeMin){
+		throw Error("Invalid Uptime Range");
+	}
+	let filteredServers = [];
+	if(categorized){		//Apply filters to the currently enabled dataset, categorized or uncategorized
+		filteredServers = filterByAreas(servers, areaFilters);
+	} else {
+		filteredServers = filterByAreas(uncategorizedServers, areaFilters);
+	}
+	filteredServers = filterByFormats(filteredServers, formatFilters);
+	filteredServers = filterByUptime(filteredServers, uptimeMin, uptimeMax);
+	if(filteredServers.length === 0){
+		throw Error("No servers match those criteria.");
+	}
+	return filteredServers;
+}
+
+function getIncompleteData(){					//List servers for which data is incomplete
+	return incomplete.map((s)=>s.hostname);
+}
+
+		</script>
+	</body>
+</html>
