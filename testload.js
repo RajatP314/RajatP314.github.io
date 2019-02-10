@@ -1,1 +1,1 @@
-alert('XSS test payload');
+
