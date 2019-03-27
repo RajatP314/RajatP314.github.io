@@ -11,7 +11,7 @@
 	</head>
 	<body>
 		<div id="container">
-			<canvas width="900" height="900"></canvas>
+			<canvas></canvas>
 			<div id="ui_container">
 				<p class="button_container">
 					<button type="button" id="v1">Uptime</button>
@@ -60,6 +60,7 @@
 		<script>
 let c = document.querySelector("canvas");			//Define all the variables
 let f = c.getContext("2d");
+c.width = c.height = window.innerHeight;
 let info = document.querySelector("#info_box");
 
 let servers = [];
