@@ -10,7 +10,7 @@ html, body
 
 #container
 {
-	height: 900px;
+	height: 100vh;
 	min-width: 1350px;
 }
 
@@ -27,7 +27,7 @@ canvas
   float:left;
   width: calc(94% - 900px);
   min-width: 375px;
-  height: 900px;
+  height: 100vh;
   margin-right: 1%;
   overflow-y: auto;
   display: inline-block;
