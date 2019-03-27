@@ -25,7 +25,7 @@ canvas
 #ui_container
 {
   float:left;
-  width: calc(94% - 900px);
+  width: calc(94% - 100vh);
   min-width: 375px;
   height: 100vh;
   margin-right: 1%;
